@@ -68,5 +68,10 @@
             <version>1.16-R0.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>4.3.0</version>
+        </dependency>
     </dependencies>
 </project>

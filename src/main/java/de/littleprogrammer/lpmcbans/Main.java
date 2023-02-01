@@ -3,9 +3,16 @@ package de.littleprogrammer.lpmcbans;
 import de.littleprogrammer.lpmcbans.commands.*;
 import de.littleprogrammer.lpmcbans.listeners.ChatListener;
 import de.littleprogrammer.lpmcbans.listeners.ConnectListeners;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.JedisPubSub;
 
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public final class Main extends Plugin {
@@ -36,6 +43,7 @@ public final class Main extends Plugin {
         getProxy().getPluginManager().registerListener(this, new ConnectListeners());
         getProxy().getPluginManager().registerListener(this, new ChatListener());
 
+
         //Database
         getProxy().getScheduler().schedule(this, () -> {
             database = new Database();
@@ -57,6 +65,13 @@ public final class Main extends Plugin {
             e.printStackTrace();
         }
         System.out.println("Database is connected = " + database.isConnected());
+
+
+        //Jedis Connect
+        JedisPooled jedis = new JedisPooled("localhost", 6379);
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+
+        executor.execute(() -> jedis.subscribe(new JedisTerminal("onlyOne"), "ban"));
     }
 
     @Override
