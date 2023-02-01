@@ -20,7 +20,7 @@ public class ConnectListeners implements Listener {
 
 
     @EventHandler
-    public void onPostLogin(PostLoginEvent event) {
+    public void onPostLogin(PostLoginEvent event) throws SQLException {
 
         try {
             customePlayer = new CustomePlayer(event.getPlayer().getUniqueId());
@@ -43,19 +43,21 @@ public class ConnectListeners implements Listener {
             }
         }
         customePlayer.setOnline((byte) 1);
+        System.out.println("set online");
         if (customePlayer.getName() == null || customePlayer.getName().equals("noplayernameherenow")) {
             customePlayer.setName(event.getPlayer().getName());
         }
     }
 
     @EventHandler
-    public void onPlayerDisconnect(PlayerDisconnectEvent event) {
+    public void onPlayerDisconnect(PlayerDisconnectEvent event) throws SQLException {
         try {
             customePlayer = new CustomePlayer(event.getPlayer().getUniqueId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        customePlayer.setOnline((byte) 1);
+        customePlayer.setOnline((byte) 0);
+        System.out.println("set offline");
     }
 }

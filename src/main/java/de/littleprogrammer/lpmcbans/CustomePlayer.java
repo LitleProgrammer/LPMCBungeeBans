@@ -87,16 +87,22 @@ public class CustomePlayer {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws SQLException {
         this.name = name;
+
+        PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET NAME = '" + name + "' WHERE UUID = '" + uuid + "';");
+        statement.executeUpdate();
     }
 
     public byte getOnline() {
         return online;
     }
 
-    public void setOnline(byte online) {
+    public void setOnline(byte online) throws SQLException {
         this.online = online;
+
+        PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET ONLINE = '" + online + "' WHERE UUID = '" + uuid + "';");
+        statement.executeUpdate();
     }
 
     public byte getMute() {
