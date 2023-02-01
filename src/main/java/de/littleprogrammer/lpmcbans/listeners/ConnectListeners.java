@@ -43,7 +43,6 @@ public class ConnectListeners implements Listener {
             }
         }
         customePlayer.setOnline((byte) 1);
-        System.out.println("set online");
         if (customePlayer.getName() == null || customePlayer.getName().equals("noplayernameherenow")) {
             customePlayer.setName(event.getPlayer().getName());
         }
@@ -58,6 +57,5 @@ public class ConnectListeners implements Listener {
         }
 
         customePlayer.setOnline((byte) 0);
-        System.out.println("set offline");
     }
 }
