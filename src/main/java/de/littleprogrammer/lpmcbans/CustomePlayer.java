@@ -10,7 +10,9 @@ public class CustomePlayer {
     private UUID uuid;
     private byte mute;
     private byte ban;
+    private byte online;
     private String rank;
+    private String name;
     private Timestamp muteTimestamp;
     private Timestamp banTimestamp;
     private Timestamp now = Timestamp.valueOf(LocalDateTime.now());
@@ -25,16 +27,18 @@ public class CustomePlayer {
         //Getting normal values
         PreparedStatement statement = null;
 
-        statement = Main.getInstance().getDatabase().getConnection().prepareStatement("SELECT RANK, MUTE, MUTEON, BAN, BANON FROM players WHERE UUID = ?");
+        statement = Main.getInstance().getDatabase().getConnection().prepareStatement("SELECT NAME, RANK, MUTE, MUTEON, BAN, BANON, ONLINE FROM players WHERE UUID = ?");
         statement.setString(1, uuid.toString());
 
         ResultSet rs = statement.executeQuery();
         if (rs.next()){
+            name = rs.getString("NAME");
             rank = rs.getString("RANK");
             mute = rs.getByte("MUTE");
             muteTimestamp = rs.getTimestamp("MUTEON");
             ban = rs.getByte("BAN");
             banTimestamp = rs.getTimestamp("BANON");
+            online = rs.getByte("ONLINE");
         }else {
             mute = 0;
             muteTimestamp = now;
@@ -77,6 +81,22 @@ public class CustomePlayer {
             playerMuted.add(rs3.getString("UUID"));
         }
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public byte getOnline() {
+        return online;
+    }
+
+    public void setOnline(byte online) {
+        this.online = online;
     }
 
     public byte getMute() {

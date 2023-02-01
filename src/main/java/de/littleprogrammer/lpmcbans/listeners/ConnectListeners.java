@@ -42,10 +42,20 @@ public class ConnectListeners implements Listener {
                 }
             }
         }
+        customePlayer.setOnline((byte) 1);
+        if (customePlayer.getName() == null || customePlayer.getName().equals("noplayernameherenow")) {
+            customePlayer.setName(event.getPlayer().getName());
+        }
     }
 
     @EventHandler
     public void onPlayerDisconnect(PlayerDisconnectEvent event) {
-        e.
+        try {
+            customePlayer = new CustomePlayer(event.getPlayer().getUniqueId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        customePlayer.setOnline((byte) 1);
     }
 }
