@@ -1,0 +1,5 @@
+name: LpmcBans
+version: '${project.version}'
+main: de.littleprogrammer.lpmcbans.Main
+description: Manages the Bans, Mutes, Kicks and Unbans for LPMC
+
