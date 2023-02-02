@@ -39,7 +39,7 @@ public class JedisTerminal extends JedisPubSub {
         if (channel.equals("mute")){
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()){
                 muteCommand = new MuteCommand();
-                muteCommand.Mute(UUID.fromString(message));
+                muteCommand.Mute(UUID.fromString(message)); //this.UUIDConverter = null
             }
         }
     }
