@@ -142,5 +142,39 @@ public class BanCommand extends Command implements TabExecutor {
                     }
         }
     }
+
+    public void Ban(UUID playerUUID) {
+
+        UUID targetUUID = playerUUID;
+        String targetName = uuidConverter.NAME(String.valueOf(targetUUID));
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            customePlayer = new CustomePlayer(targetUUID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (customePlayer.getBan() == 0) {
+            try {
+                customePlayer.setBan((byte) 1);
+                //Calculating the time till the player is banned and setting it
+                cal.setTimeInMillis(now.getTime());
+                cal.add(Calendar.YEAR, 99);
+                banTill = new Timestamp(cal.getTime().getTime());
+                customePlayer.setBanTimestamp(banTill);
+                ProxyServer.getInstance().broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + targetName + ChatColor.RESET + ChatColor.GREEN + " wurde gebannt" + ChatColor.RED + " L " + ChatColor.GREEN + "in den Chat!");
+                ProxiedPlayer target = ProxyServer.getInstance().getPlayer(targetName);
+                if (target != null && target.isConnected()) {
+                    target.disconnect(ChatColor.RED + "Du bist gebannt!\n" + ChatColor.WHITE + "Um einen Entbannungsantrag zu stellen gehe auf:\n" + "lpmc.me/appeal");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return;
+    }
+
 }
 

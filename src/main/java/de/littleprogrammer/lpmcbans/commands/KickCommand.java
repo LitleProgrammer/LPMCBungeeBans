@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class KickCommand extends Command implements TabExecutor {
 
@@ -95,4 +96,15 @@ public class KickCommand extends Command implements TabExecutor {
         }
 
     }
+
+    public void Kick(UUID playerUUID) {
+
+        if (ProxyServer.getInstance().getPlayer(playerUUID).isConnected()) {
+            ProxiedPlayer target = ProxyServer.getInstance().getPlayer(playerUUID);
+
+            target.disconnect(ChatColor.RED + "Du wurdest von der Console gekickt!");
+        }
+        return;
+    }
+
 }

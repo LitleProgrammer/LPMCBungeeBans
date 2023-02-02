@@ -93,4 +93,29 @@ public class MuteCommand extends Command implements TabExecutor {
             player.sendMessage(ChatColor.RED + "Du hast keine Berechtigung dafür!");
         }
     }
+
+    public void Mute(UUID playerUUID) {
+            UUID targetUUID = playerUUID;
+
+            try {
+                customePlayer = new CustomePlayer(targetUUID);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (customePlayer.getMute() == 0){
+                try {
+                    customePlayer.setMute((byte) 1);
+                    ProxiedPlayer target = ProxyServer.getInstance().getPlayer(targetUUID);
+                    if (target != null && target.isConnected()){
+                        target.sendMessage(ChatColor.RED + "Du wurdest gemuted!");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                return;
+                //player.sendMessage(ChatColor.RED + "Der Spieler ist bereits gemuted!");
+            }
+    }
+
 }

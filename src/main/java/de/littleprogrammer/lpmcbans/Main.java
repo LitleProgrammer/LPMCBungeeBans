@@ -71,7 +71,7 @@ public final class Main extends Plugin {
         JedisPooled jedis = new JedisPooled("localhost", 6379);
         ExecutorService executor = Executors.newFixedThreadPool(4);
 
-        executor.execute(() -> jedis.subscribe(new JedisTerminal("onlyOne"), "ban"));
+        executor.execute(() -> jedis.subscribe(new JedisTerminal("onlyOne"), "ban", "kick", "mute"));
     }
 
     @Override
