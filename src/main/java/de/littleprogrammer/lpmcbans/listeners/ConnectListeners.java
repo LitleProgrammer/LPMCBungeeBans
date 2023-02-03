@@ -31,7 +31,7 @@ public class ConnectListeners implements Listener {
         if (customePlayer.getBan() == 1){
             if (!customePlayer.getRank().equalsIgnoreCase("ADMIN")) {
                 if (customePlayer.getBanTimestamp().after(now)) {
-                    event.getPlayer().disconnect(ChatColor.RED + "Du bist bis zum " + ChatColor.WHITE + customePlayer.getBanTimestamp().toString() + " (CET/MEZ)" + ChatColor.RED + " von diesem Server gebannt!\n" + ChatColor.WHITE + "Um einen Entbannungsantrag zu stellen gehe auf:\n" + "///");
+                    event.getPlayer().disconnect(ChatColor.RED + "Du bist bis zum " + ChatColor.WHITE + customePlayer.getBanTimestamp().toString() + " (CET/MEZ)" + ChatColor.RED + " von diesem Server gebannt!\n" + ChatColor.RED + "Um einen Entbannungsantrag zu stellen gehe auf:\n" + ChatColor.WHITE + "https://lpmc.me/appeal");
                 }else {
                     try {
                         customePlayer.setBan((byte) 0);

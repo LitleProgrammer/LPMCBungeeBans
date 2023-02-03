@@ -44,17 +44,23 @@ public final class Main extends Plugin {
         getProxy().getPluginManager().registerListener(this, new ChatListener());
 
 
-        //Database
+        //Database & Redis ping
+        JedisPooled jedis = new JedisPooled("localhost", 6379);
         getProxy().getScheduler().schedule(this, () -> {
             database = new Database();
             try {
                 database.connect();
-                System.out.println("Proxy Bans Reconnect");
+                if (jedis.get("ping").equalsIgnoreCase("1")){
+                    jedis.set("ping", "0");
+                }else {
+                    jedis.set("ping", "1");
+                }
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println("Reconnect Failed (Proxy Bans)");
             }
-        }, 3, 3, TimeUnit.MINUTES);
+        }, 3, 3, TimeUnit.MINUTES);//14:44:30
 
 
         database = new Database();
@@ -68,7 +74,6 @@ public final class Main extends Plugin {
 
 
         //Jedis Connect
-        JedisPooled jedis = new JedisPooled("localhost", 6379);
         ExecutorService executor = Executors.newFixedThreadPool(4);
 
         executor.execute(() -> jedis.subscribe(new JedisTerminal("onlyOne"), "ban", "kick", "mute"));
