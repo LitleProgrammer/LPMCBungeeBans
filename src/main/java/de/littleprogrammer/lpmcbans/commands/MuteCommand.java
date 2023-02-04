@@ -10,6 +10,8 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +20,7 @@ public class MuteCommand extends Command implements TabExecutor {
 
     private CustomePlayer customePlayer;
     private UUIDConverter uuidConverter;
+    private Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
     public MuteCommand(){
         super("Mute");
@@ -105,6 +108,7 @@ public class MuteCommand extends Command implements TabExecutor {
             if (customePlayer.getMute() == 0){
                 try {
                     customePlayer.setMute((byte) 1);
+                    customePlayer.setMuteTimestamp(now);
                     ProxiedPlayer target = ProxyServer.getInstance().getPlayer(targetUUID);
                     if (target != null && target.isConnected()){
                         target.sendMessage(ChatColor.RED + "Du wurdest gemuted!");

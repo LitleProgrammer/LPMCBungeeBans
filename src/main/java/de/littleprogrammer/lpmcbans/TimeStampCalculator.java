@@ -10,14 +10,16 @@ public class TimeStampCalculator {
         Timestamp date_1 = stringToTimestamp(date1);
         Timestamp date_2 = stringToTimestamp(date2);
         long milliseconds = date_1.getTime() - date_2.getTime();
-        if (value.equals("second"))
-            return milliseconds / 1000;
-        if (value.equals("minute"))
-            return milliseconds / 1000 / 60;
-        if (value.equals("hours"))
-            return milliseconds / 1000 / 3600;
-        else
-            return new Long(999999999);
+        switch (value) {
+            case "second":
+                return milliseconds / 1000;
+            case "minute":
+                return milliseconds / 1000 / 60;
+            case "hours":
+                return milliseconds / 1000 / 3600;
+            default:
+                return new Long(999999999);
+        }
     }
 
     public Timestamp stringToTimestamp(String date) {
