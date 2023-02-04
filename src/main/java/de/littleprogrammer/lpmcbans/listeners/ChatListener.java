@@ -60,6 +60,10 @@ public class ChatListener implements Listener {
                 customePlayer.setMuteTimestamp(now);
                 player.sendMessage(ChatColor.RED + "Du wurdest entmutet bitte verhalte dich in zukunft besser im Chat!");
             }
+            if (customePlayer.getRank().equalsIgnoreCase("ADMIN")) {
+                customePlayer.setMute((byte) 0);
+                player.sendMessage(ChatColor.RED + "Du wurdest von dem Web Inerface gemuted, nun wurdest du entmuted weil du ein Admin bist.\nVerhalte dich bitte besser im Chat das nächste mal!");
+            }
         }
 
 
@@ -83,6 +87,7 @@ public class ChatListener implements Listener {
                 //Sends message to ADMIN player to warn him
                 player.sendMessage(ChatColor.RED + "Bitte achte auf deine Wortwahl.");
                 player.sendMessage(ChatColor.RED + "Du bist ein Admin deshalb wirst du nicht gemuted");
+                customePlayer.setMute((byte) 0);
             }
         }
     }
