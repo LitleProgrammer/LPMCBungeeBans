@@ -8,6 +8,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import redis.clients.jedis.JedisPubSub;
 
 import java.io.Console;
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class JedisTerminal extends JedisPubSub {
@@ -25,7 +26,11 @@ public class JedisTerminal extends JedisPubSub {
         if (channel.equals("ban")){
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()){
                 banCommand = new BanCommand();
-                banCommand.Ban(UUID.fromString(message));
+                try {
+                    banCommand.Ban(UUID.fromString(message));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
         if (channel.equals("kick")){
@@ -39,7 +44,11 @@ public class JedisTerminal extends JedisPubSub {
         if (channel.equals("mute")){
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()){
                 muteCommand = new MuteCommand();
-                muteCommand.Mute(UUID.fromString(message)); //this.UUIDConverter = null
+                try {
+                    muteCommand.Mute(UUID.fromString(message));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

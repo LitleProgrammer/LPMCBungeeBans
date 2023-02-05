@@ -1,6 +1,7 @@
 package de.littleprogrammer.lpmcbans.commands;
 
 import de.littleprogrammer.lpmcbans.CustomePlayer;
+import de.littleprogrammer.lpmcbans.Main;
 import de.littleprogrammer.lpmcbans.UUIDConverter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -9,6 +10,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -97,7 +99,7 @@ public class MuteCommand extends Command implements TabExecutor {
         }
     }
 
-    public void Mute(UUID playerUUID) {
+    public void Mute(UUID playerUUID) throws SQLException {
             UUID targetUUID = playerUUID;
 
             try {
@@ -105,20 +107,23 @@ public class MuteCommand extends Command implements TabExecutor {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            if (customePlayer.getMute() == 0){
-                try {
-                    customePlayer.setMute((byte) 1);
-                    customePlayer.setMuteTimestamp(now);
-                    ProxiedPlayer target = ProxyServer.getInstance().getPlayer(targetUUID);
-                    if (target != null && target.isConnected()){
+            ProxiedPlayer target = ProxyServer.getInstance().getPlayer(targetUUID);
+
+            if (customePlayer.getMute() == 0) {
+                if (target == null) {
+                    System.out.println("Player not Connected UUID: " + targetUUID);
+                    PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET MUTE=1 WHERE UUID='" + playerUUID + "';");
+                    statement.executeUpdate();
+                } else if (target.isConnected()) {
+                    System.out.println("Player is Connected UUID: " + targetUUID);
+                    try {
+                        customePlayer.setMute((byte) 1);
+                        customePlayer.setMuteTimestamp(now);
                         target.sendMessage(ChatColor.RED + "Du wurdest gemuted!");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                } catch (SQLException e) {
-                    e.printStackTrace();
                 }
-            }else {
-                return;
-                //player.sendMessage(ChatColor.RED + "Der Spieler ist bereits gemuted!");
             }
     }
 

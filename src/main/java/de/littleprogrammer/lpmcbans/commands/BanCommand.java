@@ -1,6 +1,7 @@
 package de.littleprogrammer.lpmcbans.commands;
 
 import de.littleprogrammer.lpmcbans.CustomePlayer;
+import de.littleprogrammer.lpmcbans.Main;
 import de.littleprogrammer.lpmcbans.TimeStampCalculator;
 import de.littleprogrammer.lpmcbans.UUIDConverter;
 import net.md_5.bungee.api.ChatColor;
@@ -10,6 +11,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -143,7 +145,7 @@ public class BanCommand extends Command implements TabExecutor {
         }
     }
 
-    public void Ban(UUID playerUUID) {
+    public void Ban(UUID playerUUID) throws SQLException {
 
         uuidConverter = new UUIDConverter();
 
@@ -157,21 +159,27 @@ public class BanCommand extends Command implements TabExecutor {
             e.printStackTrace();
         }
 
+        ProxiedPlayer target = ProxyServer.getInstance().getPlayer(targetUUID);
+
         if (customePlayer.getBan() == 0) {
-            try {
-                customePlayer.setBan((byte) 1);
-                //Calculating the time till the player is banned and setting it
-                cal.setTimeInMillis(now.getTime());
-                cal.add(Calendar.YEAR, 99);
-                banTill = new Timestamp(cal.getTime().getTime());
-                customePlayer.setBanTimestamp(banTill);
-                ProxyServer.getInstance().broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + targetName + ChatColor.RESET + ChatColor.GREEN + " wurde gebannt" + ChatColor.RED + " L " + ChatColor.GREEN + "in den Chat!");
-                ProxiedPlayer target = ProxyServer.getInstance().getPlayer(targetName);
-                if (target != null && target.isConnected()) {
-                    target.disconnect(ChatColor.RED + "Du bist gebannt!\n" + ChatColor.RED + "Um einen Entbannungsantrag zu stellen gehe auf:\n " + ChatColor.WHITE + "https://lpmc.me/appeal");
+            if (target.isConnected()) {
+                try {
+                    customePlayer.setBan((byte) 1);
+                    //Calculating the time till the player is banned and setting it
+                    cal.setTimeInMillis(now.getTime());
+                    cal.add(Calendar.YEAR, 99);
+                    banTill = new Timestamp(cal.getTime().getTime());
+                    customePlayer.setBanTimestamp(banTill);
+                    ProxyServer.getInstance().broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + targetName + ChatColor.RESET + ChatColor.GREEN + " wurde gebannt" + ChatColor.RED + " L " + ChatColor.GREEN + "in den Chat!");
+                    if (target != null && target.isConnected()) {
+                        target.disconnect(ChatColor.RED + "Du bist gebannt!\n" + ChatColor.RED + "Um einen Entbannungsantrag zu stellen gehe auf:\n " + ChatColor.WHITE + "https://lpmc.me/appeal");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } else if (!target.isConnected()) {
+                PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET BAN=1 WHERE UUID='" + playerUUID + "';");
+                statement.executeUpdate();
             }
         }
 
