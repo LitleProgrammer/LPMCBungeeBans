@@ -4,6 +4,7 @@ import de.littleprogrammer.lpmcbans.CustomePlayer;
 import de.littleprogrammer.lpmcbans.UUIDConverter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -87,5 +88,26 @@ public class UnbanCommand extends Command implements TabExecutor {
             player.sendMessage(ChatColor.RED + "Du hast keine Berechtigung dafür!");
         }
     }
+
+    public void Unban(UUID playerUUID) {
+        UUID targetUUID = playerUUID;
+
+        try {
+            customePlayer = new CustomePlayer(targetUUID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (customePlayer.getBan() == 1) {
+            try {
+                customePlayer.setBan((byte) 0);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
 }
 

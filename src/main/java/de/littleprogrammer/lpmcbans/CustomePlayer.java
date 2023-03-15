@@ -17,6 +17,7 @@ public class CustomePlayer {
     private Timestamp banTimestamp;
     private Timestamp now = Timestamp.valueOf(LocalDateTime.now());
     private List<String> playersInDB = new ArrayList<>();
+    private List<String> playerNamesInDB = new ArrayList<>();
     private List<String> playersBanned = new ArrayList<>();
     private List<String> playerMuted = new ArrayList<>();
 
@@ -57,6 +58,16 @@ public class CustomePlayer {
         ResultSet rs1 = statement1.executeQuery();
         while (rs1.next()){
             playersInDB.add(rs1.getString("UUID"));
+        }
+
+        //AllPLayerNames
+        PreparedStatement statement4 = null;
+
+        statement4 = Main.getInstance().getDatabase().getConnection().prepareStatement("SELECT NAME FROM players");
+
+        ResultSet rs4 = statement4.executeQuery();
+        while (rs4.next()){
+            playerNamesInDB.add(rs4.getString("NAME"));
         }
 
         //BannedPlayers
@@ -127,6 +138,10 @@ public class CustomePlayer {
 
     public List<String> getPlayersInDB() {
         return playersInDB;
+    }
+
+    public List<String> getPlayerNamesInDB() {
+        return playerNamesInDB;
     }
 
     public List<String> getPlayersBanned() {

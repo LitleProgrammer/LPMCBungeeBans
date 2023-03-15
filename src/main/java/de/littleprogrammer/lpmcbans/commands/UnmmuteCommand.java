@@ -92,4 +92,25 @@ public class UnmmuteCommand extends Command implements TabExecutor {
             player.sendMessage(ChatColor.RED + "Du hast keine Berechtigung dafür!");
         }
     }
+
+    public void Unmute(UUID playerUUID) throws SQLException {
+        UUID targetUUID = playerUUID;
+
+        try {
+            customePlayer = new CustomePlayer(targetUUID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        ProxiedPlayer target = ProxyServer.getInstance().getPlayer(targetUUID);
+
+        if (customePlayer.getMute() == 1) {
+            if (target == null) {
+                customePlayer.setMute((byte) 0);
+            } else if (target.isConnected()) {
+                customePlayer.setMute((byte) 0);
+                target.sendMessage(ChatColor.RED + "Du wurdest entmuted!");
+            }
+        }
+
+    }
 }

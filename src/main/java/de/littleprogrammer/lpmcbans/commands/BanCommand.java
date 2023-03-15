@@ -46,10 +46,16 @@ public class BanCommand extends Command implements TabExecutor {
 
         String playerName;
 
-        if (args.length == 1){
+        /*if (args.length == 1){
             for (String player : customePlayer.getPlayersInDB()){
                 playerName = uuidConverter.NAME(player);
                 completions.add(playerName);
+            }
+        }*/
+
+        if (args.length == 1) {
+            for (String playerNameTab : customePlayer.getPlayerNamesInDB()) {
+                completions.add(playerNameTab);
             }
         }
 
@@ -162,7 +168,11 @@ public class BanCommand extends Command implements TabExecutor {
         ProxiedPlayer target = ProxyServer.getInstance().getPlayer(targetUUID);
 
         if (customePlayer.getBan() == 0) {
-            if (target.isConnected()) {
+            if (target == null) {
+                PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET BAN=1 WHERE UUID='" + playerUUID + "';");
+                statement.executeUpdate();
+
+            } else if (target.isConnected()) {
                 try {
                     customePlayer.setBan((byte) 1);
                     //Calculating the time till the player is banned and setting it
@@ -171,19 +181,12 @@ public class BanCommand extends Command implements TabExecutor {
                     banTill = new Timestamp(cal.getTime().getTime());
                     customePlayer.setBanTimestamp(banTill);
                     ProxyServer.getInstance().broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + targetName + ChatColor.RESET + ChatColor.GREEN + " wurde gebannt" + ChatColor.RED + " L " + ChatColor.GREEN + "in den Chat!");
-                    if (target != null && target.isConnected()) {
-                        target.disconnect(ChatColor.RED + "Du bist gebannt!\n" + ChatColor.RED + "Um einen Entbannungsantrag zu stellen gehe auf:\n " + ChatColor.WHITE + "https://lpmc.me/appeal");
-                    }
+                    target.disconnect(ChatColor.RED + "Du bist gebannt!\n" + ChatColor.RED + "Um einen Entbannungsantrag zu stellen gehe auf:\n " + ChatColor.WHITE + "https://lpmc.me/appeal");
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            } else if (!target.isConnected()) {
-                PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET BAN=1 WHERE UUID='" + playerUUID + "';");
-                statement.executeUpdate();
             }
         }
-
-        return;
     }
 
 }

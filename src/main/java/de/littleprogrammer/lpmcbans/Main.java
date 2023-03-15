@@ -60,7 +60,7 @@ public final class Main extends Plugin {
                 e.printStackTrace();
                 System.out.println("Reconnect Failed (Proxy Bans)");
             }
-        }, 3, 3, TimeUnit.MINUTES);//14:44:30
+        }, 59, 57, TimeUnit.SECONDS);//14:44:30
 
 
         database = new Database();
@@ -76,7 +76,7 @@ public final class Main extends Plugin {
         //Jedis Connect
         ExecutorService executor = Executors.newFixedThreadPool(4);
 
-        executor.execute(() -> jedis.subscribe(new JedisTerminal("onlyOne"), "ban", "kick", "mute"));
+        executor.execute(() -> jedis.subscribe(new JedisTerminal("onlyOne"), "ban", "kick", "mute", "unban", "unmute"));
     }
 
     @Override
