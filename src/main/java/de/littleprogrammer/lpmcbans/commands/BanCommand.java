@@ -169,8 +169,13 @@ public class BanCommand extends Command implements TabExecutor {
 
         if (customePlayer.getBan() == 0) {
             if (target == null) {
+
+                Main.getInstance().getDatabase().connect();
+
                 PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET BAN=1 WHERE UUID='" + playerUUID + "';");
                 statement.executeUpdate();
+
+                Main.getInstance().getDatabase().disconnect();
 
             } else if (target.isConnected()) {
                 try {

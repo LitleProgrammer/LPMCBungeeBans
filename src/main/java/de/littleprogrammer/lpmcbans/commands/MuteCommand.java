@@ -112,8 +112,13 @@ public class MuteCommand extends Command implements TabExecutor {
             if (customePlayer.getMute() == 0) {
                 if (target == null) {
                     System.out.println("Player not Connected UUID: " + targetUUID);
+
+                    Main.getInstance().getDatabase().connect();
+
                     PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET MUTE=1 WHERE UUID='" + playerUUID + "';");
                     statement.executeUpdate();
+
+                    Main.getInstance().getDatabase().disconnect();
                 } else if (target.isConnected()) {
                     System.out.println("Player is Connected UUID: " + targetUUID);
                     try {

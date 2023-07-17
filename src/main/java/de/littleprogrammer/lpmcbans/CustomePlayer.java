@@ -25,6 +25,8 @@ public class CustomePlayer {
 
         this.uuid = uuid;
 
+        Main.getInstance().getDatabase().connect();
+
         //Getting normal values
         PreparedStatement statement = null;
 
@@ -92,6 +94,8 @@ public class CustomePlayer {
             playerMuted.add(rs3.getString("UUID"));
         }
 
+        Main.getInstance().getDatabase().disconnect();
+
     }
 
     public String getName() {
@@ -101,8 +105,12 @@ public class CustomePlayer {
     public void setName(String name) throws SQLException {
         this.name = name;
 
+        Main.getInstance().getDatabase().connect();
+
         PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET NAME = '" + name + "' WHERE UUID = '" + uuid + "';");
         statement.executeUpdate();
+
+        Main.getInstance().getDatabase().disconnect();
     }
 
     public byte getOnline() {
@@ -112,8 +120,12 @@ public class CustomePlayer {
     public void setOnline(byte online) throws SQLException {
         this.online = online;
 
+        Main.getInstance().getDatabase().connect();
+
         PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET ONLINE = '" + online + "' WHERE UUID = '" + uuid + "';");
         statement.executeUpdate();
+
+        Main.getInstance().getDatabase().disconnect();
     }
 
     public byte getMute() {
@@ -155,28 +167,44 @@ public class CustomePlayer {
     public void setMute(byte mute) throws SQLException {
         this.mute = mute;
 
+        Main.getInstance().getDatabase().connect();
+
         PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET MUTE = '" + mute + "' WHERE UUID = '" + uuid + "';");
         statement.executeUpdate();
+
+        Main.getInstance().getDatabase().disconnect();
     }
 
     public void setBan(byte ban) throws SQLException {
         this.ban = ban;
 
+        Main.getInstance().getDatabase().connect();
+
         PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET BAN = '" + ban + "' WHERE UUID = '" + uuid + "';");
         statement.executeUpdate();
+
+        Main.getInstance().getDatabase().disconnect();
     }
 
     public void setMuteTimestamp(Timestamp muteTimestamp) throws SQLException {
         this.muteTimestamp = muteTimestamp;
 
+        Main.getInstance().getDatabase().connect();
+
         PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET MUTEON = '" + muteTimestamp + "' WHERE UUID = '" + uuid + "';");
         statement.executeUpdate();
+
+        Main.getInstance().getDatabase().disconnect();
     }
 
     public void setBanTimestamp(Timestamp banTimestamp) throws SQLException {
         this.banTimestamp = banTimestamp;
 
+        Main.getInstance().getDatabase().connect();
+
         PreparedStatement statement = Main.getInstance().getDatabase().getConnection().prepareStatement("UPDATE players SET BANON = '" + banTimestamp + "' WHERE UUID = '" + uuid + "';");
         statement.executeUpdate();
+
+        Main.getInstance().getDatabase().disconnect();
     }
 }

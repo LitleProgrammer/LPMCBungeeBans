@@ -21,6 +21,7 @@ public class Database {
                 USERNAME,
                 PASSWORD);
 
+        System.out.println("Connected to the DB for executing query");
     }
 
     public boolean isConnected(){ return connection != null; }
@@ -30,13 +31,12 @@ public class Database {
     }
 
     public void disconnect(){
-        if (isConnected()){
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        System.out.println("Disconnected from the DB");
     }
 
 

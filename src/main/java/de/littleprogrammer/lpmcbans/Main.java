@@ -47,29 +47,15 @@ public final class Main extends Plugin {
         //Database & Redis ping
         JedisPooled jedis = new JedisPooled("localhost", 6379);
         getProxy().getScheduler().schedule(this, () -> {
-            database = new Database();
-            try {
-                database.connect();
-                if (jedis.get("ping").equalsIgnoreCase("1")){
-                    jedis.set("ping", "0");
-                }else {
-                    jedis.set("ping", "1");
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-                System.out.println("Reconnect Failed (Proxy Bans)");
+            if (jedis.get("ping").equalsIgnoreCase("1")){
+                jedis.set("ping", "0");
+            }else {
+                jedis.set("ping", "1");
             }
+
         }, 59, 57, TimeUnit.SECONDS);//14:44:30
 
 
-        database = new Database();
-        try {
-            database.connect();
-        }catch (SQLException e){
-            System.out.println("Can not connect to the database");
-            e.printStackTrace();
-        }
         System.out.println("Database is connected = " + database.isConnected());
 
 
